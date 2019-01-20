@@ -1,3 +1,9 @@
+require 'capybara'
+require 'selenium-webdriver'
+require_relative '../capybara_configuration'
+require_relative '../capybara_ext/selenium/driver'
+require_relative '../capybara_ext/session'
+
 module Kimurai::BrowserBuilder
   class SeleniumChromePdfBuilder
     class << self
