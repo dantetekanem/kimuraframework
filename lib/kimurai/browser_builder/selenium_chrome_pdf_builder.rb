@@ -18,17 +18,6 @@ module Kimurai::BrowserBuilder
       @logger = spider.logger
     end
 
-    def driver_capabilities_options
-      download_directory = 'tmp/downloads/'
-      puts "DriverCapabilitiesDownloadDirectory: #{download_directory}"
-
-      { args: ['test-type', 'disable-extensions'],
-       prefs: { plugins: { always_open_pdf_externally: true  },
-               savefile: { default_directory: download_directory },
-               download: { prompt_for_download: false,
-                             default_directory: download_directory } } }
-    end
-
     def build
       # Register driver
       Capybara.register_driver :selenium_chrome_pdf do |app|
@@ -120,8 +109,9 @@ module Kimurai::BrowserBuilder
           end
         end
 
-        capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(chromeOptions: driver_capabilities_options)
-        opts.merge!(desired_capabilities: capabilities)
+        driver_options.add_preference(:download, prompt_for_download: false,
+                                  default_directory: '/tmp/downloads')
+        driver_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
 
         chromedriver_path = Kimurai.configuration.chromedriver_path || "/usr/local/bin/chromedriver"
         Capybara::Selenium::Driver.new(app, browser: :chrome, options: driver_options, driver_path: chromedriver_path)
