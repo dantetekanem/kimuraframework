@@ -109,10 +109,9 @@ module Kimurai::BrowserBuilder
           end
         end
 
-        logger.debug "Download path: /Users/dante/Poetry/dragabras-robots/tmp/downloads/"
-        logger.debug "Rails root: #{Rails.root}"
+        logger.debug "Download path: #{Rails.root}/tmp/downloads/"
         driver_options.add_preference(:download, prompt_for_download: false,
-                                  default_directory: '/Users/dante/Poetry/dragabras-robots/tmp/downloads/')
+                                  default_directory: "#{Rails.root}/tmp/downloads/")
         driver_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
 
         chromedriver_path = Kimurai.configuration.chromedriver_path || "/usr/local/bin/chromedriver"
@@ -128,7 +127,7 @@ module Kimurai::BrowserBuilder
         bridge.http.call(:post, path, cmd: 'Page.setDownloadBehavior',
                                       params: {
                                         behavior: 'allow',
-                                        downloadPath: '/Users/dante/Poetry/dragabras-robots/tmp/downloads/'
+                                        downloadPath: "#{Rails.root}/tmp/downloads/"
                                       })
         ###
         
