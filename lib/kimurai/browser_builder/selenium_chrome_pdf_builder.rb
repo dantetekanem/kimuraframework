@@ -109,8 +109,8 @@ module Kimurai::BrowserBuilder
           end
         end
 
-        puts "Download path: /Users/dante/Poetry/dragabras-robots/tmp/downloads/"
-        puts "Rails root: #{Rails.root}"
+        logger.debug "Download path: /Users/dante/Poetry/dragabras-robots/tmp/downloads/"
+        logger.debug "Rails root: #{Rails.root}"
         driver_options.add_preference(:download, prompt_for_download: false,
                                   default_directory: '/Users/dante/Poetry/dragabras-robots/tmp/downloads/')
         driver_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
