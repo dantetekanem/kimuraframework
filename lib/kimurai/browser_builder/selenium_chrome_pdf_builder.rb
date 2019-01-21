@@ -19,7 +19,8 @@ module Kimurai::BrowserBuilder
     end
 
     def driver_capabilities_options
-      download_directory = './tmp/downloads/'
+      download_directory = 'tmp/downloads/'
+      puts "DriverCapabilitiesDownloadDirectory: #{download_directory}"
 
       { args: ['test-type', 'disable-extensions'],
        prefs: { plugins: { always_open_pdf_externally: true  },
@@ -120,9 +121,10 @@ module Kimurai::BrowserBuilder
         end
 
         capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(chromeOptions: driver_capabilities_options)
+        opts.merge!(desired_capabilities: capabilities)
 
         chromedriver_path = Kimurai.configuration.chromedriver_path || "/usr/local/bin/chromedriver"
-        Capybara::Selenium::Driver.new(app, browser: :chrome, options: driver_options, desired_capabilities: capabilities, driver_path: chromedriver_path)
+        Capybara::Selenium::Driver.new(app, browser: :chrome, options: driver_options, driver_path: chromedriver_path)
       end
 
       # Create browser instance (Capybara session)
