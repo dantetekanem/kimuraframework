@@ -114,7 +114,23 @@ module Kimurai::BrowserBuilder
         driver_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
 
         chromedriver_path = Kimurai.configuration.chromedriver_path || "/usr/local/bin/chromedriver"
-        Capybara::Selenium::Driver.new(app, browser: :chrome, options: driver_options, driver_path: chromedriver_path)
+        driver = Capybara::Selenium::Driver.new(app, browser: :chrome, options: driver_options, driver_path: chromedriver_path)
+
+        ### Allow file downloads in Google Chrome when headless!!!
+        ### https://bugs.chromium.org/p/chromium/issues/detail?id=696481#c89
+        bridge = driver.browser.send(:bridge)
+
+        path = '/session/:session_id/chromium/send_command'
+        path[':session_id'] = bridge.session_id
+
+        bridge.http.call(:post, path, cmd: 'Page.setDownloadBehavior',
+                                      params: {
+                                        behavior: 'allow',
+                                        downloadPath: '/tmp/downloads'
+                                      })
+        ###
+        
+        driver
       end
 
       # Create browser instance (Capybara session)
