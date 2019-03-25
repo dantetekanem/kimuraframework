@@ -31,6 +31,7 @@ module Kimurai::BrowserBuilder
 
         # See all options here: https://seleniumhq.github.io/selenium/docs/api/rb/Selenium/WebDriver/Chrome/Options.html
         driver_options = Selenium::WebDriver::Chrome::Options.new(opts)
+        driver_options.prefs["plugins.always_open_pdf_externally"] = true
 
         # Window size
         if size = @config[:window_size].presence
