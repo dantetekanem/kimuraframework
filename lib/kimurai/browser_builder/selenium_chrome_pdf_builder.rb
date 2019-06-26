@@ -1,5 +1,6 @@
 require 'capybara'
 require 'selenium-webdriver'
+require 'fileutils'
 require_relative '../capybara_configuration'
 require_relative '../capybara_ext/selenium/driver'
 require_relative '../capybara_ext/session'
@@ -110,9 +111,16 @@ module Kimurai::BrowserBuilder
           end
         end
 
-        logger.debug "Download path: #{Rails.root}/tmp/downloads/"
+        download_folder = @config[:download_folder] || "#{Rails.root}/tmp/"
+
+        # check if folder exists
+        unless File.exists?(download_folder)
+          FileUtils.mkdir_p(download_folder)
+        end
+
+        logger.debug "Download path: #{download_folder}"
         driver_options.add_preference(:download, prompt_for_download: false,
-                                  default_directory: "#{Rails.root}/tmp/downloads/")
+                                  default_directory: "#{download_folder}")
         driver_options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })
 
         chromedriver_path = Kimurai.configuration.chromedriver_path || "/usr/local/bin/chromedriver"
